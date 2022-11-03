@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: user-center
+  # DataSource Config
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://db.akko.space:3306/meta
+    username: meta
+    password: SWRWaZx5tpTpiac2
+server:
+  port: 8080
