@@ -14,6 +14,7 @@ public final class CommonConstant {
     /**
      * 阿拉伯数字 - Integer
      */
+    public static final Integer ZERO = 0;
     public static final Integer FOUR = 4;
     public static final Integer EIGHT = 8;
     public static final Integer SIXTEEN = 16;
