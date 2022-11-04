@@ -10,13 +10,12 @@ import java.util.Date;
  * 用户表
  *
  * @author akko
- * @TableName user
  */
 @TableName(value = "user")
 @Data
 public class User implements Serializable {
     /**
-     *
+     * Id
      */
     @TableId(type = IdType.AUTO)
     private Long id;
@@ -27,24 +26,14 @@ public class User implements Serializable {
     private String username;
 
     /**
-     * 账号
-     */
-    private String userAccount;
-
-    /**
      * 用户头像
      */
     private String avatarUrl;
 
     /**
-     * 性别
+     * 性别(0 - 女, 1 - 男)
      */
     private Integer gender;
-
-    /**
-     * 密码
-     */
-    private String userPassword;
 
     /**
      * 邮箱
@@ -52,14 +41,35 @@ public class User implements Serializable {
     private String email;
 
     /**
-     * 状态 0-正常
+     * 电话
+     */
+    private String phone;
+
+    /**
+     * 用户角色(0 - 默认角色, 1 - 管理员)
+     */
+    private Integer userRole;
+
+    /**
+     * 状态(0 - 正常)
      */
     private Integer userStatus;
 
     /**
-     * 电话
+     * 是否删除
      */
-    private String phone;
+    @TableLogic
+    private Integer delFlag;
+
+    /**
+     * 账号
+     */
+    private String userAccount;
+
+    /**
+     * 密码
+     */
+    private String userPassword;
 
     /**
      * 创建时间
@@ -70,12 +80,6 @@ public class User implements Serializable {
      * 更新时间
      */
     private Date updateTime;
-
-    /**
-     * 是否删除
-     */
-    @TableLogic
-    private Integer delFlag;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
