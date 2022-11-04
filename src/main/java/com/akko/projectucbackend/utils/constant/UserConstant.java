@@ -22,10 +22,10 @@ public final class UserConstant {
     public static final String USER_LOGIN_SESSION_KEY = "userLoginSessionKey";
     /**
      * 角色类型
-     * 0 - 管理员
-     * 1 - 默认用户
+     * 0 - 默认用户
+     * 1 - 管理员
      */
-    public static final Integer ADMIN_ROLE_TYPE = 0;
-    public static final Integer DEFAULT_ROLE_TYPE = 1;
+    public static final Integer DEFAULT_ROLE_TYPE = 0;
+    public static final Integer ADMIN_ROLE_TYPE = 1;
 
 }
