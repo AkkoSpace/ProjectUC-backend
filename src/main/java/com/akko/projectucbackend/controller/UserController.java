@@ -4,14 +4,19 @@ import com.akko.projectucbackend.model.domain.User;
 import com.akko.projectucbackend.model.domain.request.UserLoginRequest;
 import com.akko.projectucbackend.model.domain.request.UserRegisterRequest;
 import com.akko.projectucbackend.service.UserService;
+import com.akko.projectucbackend.utils.common.Desensitization;
+import com.akko.projectucbackend.utils.common.Permission;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.akko.projectucbackend.utils.constant.CommonConstant.ZERO;
 
 /**
  * 用户控制器
@@ -49,5 +54,30 @@ public class UserController {
             return null;
         }
         return userService.userLogin(userAccount, userPassword, request);
+    }
+
+    @GetMapping("/search")
+    public List<User> searchUsers(String username, HttpServletRequest request) {
+        if (!Permission.isAdmin(request)) {
+            return new ArrayList<>();
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotBlank(username)) {
+            queryWrapper.like("username", username);
+        }
+        List<User> userList = userService.list(queryWrapper);
+        return userList.stream().map(Desensitization::getSafeUser).collect(Collectors.toList());
+
+    }
+
+    @PostMapping("/delete")
+    public boolean deleteUsers(@RequestBody long id, HttpServletRequest request) {
+        if (!Permission.isAdmin(request)) {
+            return false;
+        }
+        if (id <= ZERO) {
+            return false;
+        }
+        return userService.removeById(id);
     }
 }
