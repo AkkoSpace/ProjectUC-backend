@@ -7,5 +7,6 @@ spring:
     url: jdbc:mysql://db.akko.space:3306/meta
     username: meta
     password: SWRWaZx5tpTpiac2
+# Server Config
 server:
   port: 8080
