@@ -59,7 +59,7 @@ class UserServiceTest {
         Assertions.assertEquals(-1, result);
 
         // 每次测试换一个新的账号
-        userAccount = "akkoyaa";
+        userAccount = "akko2";
         result = userService.userRegister(userAccount, userPassword, checkPassword);
         Assertions.assertTrue(result > 0);
     }
