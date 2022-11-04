@@ -7,6 +7,10 @@ spring:
     url: jdbc:mysql://db.akko.space:3306/meta
     username: meta
     password: SWRWaZx5tpTpiac2
+    # Session Config
+  session:
+    # 一天 60*60*24 = 86400
+    timeout: 86400
 
 # MyBatis Config
 mybatis-plus:
