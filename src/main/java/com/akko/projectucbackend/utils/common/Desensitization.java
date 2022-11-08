@@ -21,6 +21,9 @@ public class Desensitization {
      * @return safeUser 脱敏后的用户信息
      */
     public static User getSafeUser(User originUser) {
+        if (originUser == null) {
+            return null;
+        }
         User safeUser = new User();
         safeUser.setId(originUser.getId());
         safeUser.setUsername(originUser.getUsername());
