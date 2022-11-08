@@ -51,7 +51,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             return -1;
         }
         // 1.3 账户名称特殊字符校验
-        boolean isMatch = ReUtil.isMatch("^[\\u4E00-\\u9FA5A-Za-z0-9_]+$", userAccount);
+        boolean isMatch = ReUtil.isMatch("^[A-Za-z0-9]+$", userAccount);
         if (!isMatch) {
             return -1;
         }
@@ -97,7 +97,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             return null;
         }
         // 1.3 账户名称特殊字符校验
-        boolean isMatch = ReUtil.isMatch("^[\\u4E00-\\u9FA5A-Za-z0-9_]+$", userAccount);
+        boolean isMatch = ReUtil.isMatch("^[A-Za-z0-9]+$", userAccount);
         if (!isMatch) {
             return null;
         }
