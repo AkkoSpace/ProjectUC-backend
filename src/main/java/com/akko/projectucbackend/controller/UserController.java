@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.akko.projectucbackend.utils.common.Desensitization.getSafeUser;
 import static com.akko.projectucbackend.utils.constant.CommonConstant.ZERO;
+import static com.akko.projectucbackend.utils.constant.UserConstant.USER_LOGIN_SESSION_KEY;
 
 /**
  * 用户控制器
@@ -54,6 +56,20 @@ public class UserController {
             return null;
         }
         return userService.userLogin(userAccount, userPassword, request);
+    }
+
+    @GetMapping("/current")
+    public User getCurrentUser(HttpServletRequest request) {
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_SESSION_KEY);
+        User currentUser = (User) userObj;
+        if (currentUser == null) {
+            return null;
+        }
+        long userId = currentUser.getId();
+        //TODO 用户合法性校验
+        User user = userService.getById(userId);
+        return getSafeUser(user);
+
     }
 
     @GetMapping("/search")
