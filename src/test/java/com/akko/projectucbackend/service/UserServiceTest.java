@@ -32,35 +32,36 @@ class UserServiceTest {
         String userAccount = "akko";
         String userPassword = "";
         String checkPassword = "123456";
-        long result = userService.userRegister(userAccount, userPassword, checkPassword);
+        String lazyKey = "1234";
+        long result = userService.userRegister(userAccount, userPassword, checkPassword, lazyKey);
         Assertions.assertEquals(-1, result);
 
         userAccount = "ak";
-        result = userService.userRegister(userAccount, userPassword, checkPassword);
+        result = userService.userRegister(userAccount, userPassword, checkPassword, lazyKey);
         Assertions.assertEquals(-1, result);
 
         userAccount = "akko";
         userPassword = "123456";
-        result = userService.userRegister(userAccount, userPassword, checkPassword);
+        result = userService.userRegister(userAccount, userPassword, checkPassword, lazyKey);
         Assertions.assertEquals(-1, result);
 
         userAccount = "ak ko";
         userPassword = "12345678";
-        result = userService.userRegister(userAccount, userPassword, checkPassword);
+        result = userService.userRegister(userAccount, userPassword, checkPassword, lazyKey);
         Assertions.assertEquals(-1, result);
 
         checkPassword = "123456789";
-        result = userService.userRegister(userAccount, userPassword, checkPassword);
+        result = userService.userRegister(userAccount, userPassword, checkPassword, lazyKey);
         Assertions.assertEquals(-1, result);
 
         userAccount = "akkoyan";
         checkPassword = "12345678";
-        result = userService.userRegister(userAccount, userPassword, checkPassword);
+        result = userService.userRegister(userAccount, userPassword, checkPassword, lazyKey);
         Assertions.assertEquals(-1, result);
 
         // 每次测试换一个新的账号
-        userAccount = "akko2";
-        result = userService.userRegister(userAccount, userPassword, checkPassword);
+        userAccount = "akko1111";
+        result = userService.userRegister(userAccount, userPassword, checkPassword, lazyKey);
         Assertions.assertTrue(result > 0);
     }
 }
