@@ -72,6 +72,11 @@ public class User implements Serializable {
     private String userPassword;
 
     /**
+     * 专属密钥
+     */
+    private String lazyKey;
+
+    /**
      * 创建时间
      */
     private Date createTime;

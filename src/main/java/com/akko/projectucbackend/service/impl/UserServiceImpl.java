@@ -32,10 +32,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private UserMapper userMapper;
 
     @Override
-    public long userRegister(String userAccount, String userPassword, String checkPassword) {
+    public long userRegister(String userAccount, String userPassword, String checkPassword, String lazyKey) {
         // 1. 校验
         // 1.1 非空校验
-        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
+        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, lazyKey)) {
             return -1;
         }
         // 1.2 长度校验
@@ -50,15 +50,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (checkPassword.length() < EIGHT || checkPassword.length() > SIXTEEN) {
             return -1;
         }
+        // 1.2.3 专属密钥长度校验
+        if (lazyKey.length() < FOUR || lazyKey.length() > EIGHT) {
+            return -1;
+        }
         // 1.3 账户名称特殊字符校验
         boolean isMatch = ReUtil.isMatch("^[A-Za-z0-9]+$", userAccount);
         if (!isMatch) {
             return -1;
         }
-        // 1.4 账户重复校验
+        // 1.4 重复校验
+        // 1.4.1 账号重复校验
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_account", userAccount);
         long count = userMapper.selectCount(queryWrapper);
+        if (count > 0) {
+            return -1;
+        }
+        // 1.4.2 专属密钥重复校验
+        queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("lazy_key", lazyKey);
+        count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
             return -1;
         }
@@ -72,6 +84,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         User user = new User();
         user.setUserAccount(userAccount);
         user.setUserPassword(md5Password);
+        user.setLazyKey(lazyKey);
         boolean saveResult = save(user);
         if (!saveResult) {
             return -1;
@@ -117,6 +130,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 4. 记录用户登录态
         request.getSession().setAttribute(USER_LOGIN_SESSION_KEY, safeUser);
         return safeUser;
+    }
+
+    @Override
+    public int userLogout(HttpServletRequest request) {
+        request.getSession().removeAttribute(USER_LOGIN_SESSION_KEY);
+        return 1;
     }
 
 }

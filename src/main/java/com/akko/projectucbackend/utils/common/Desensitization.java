@@ -32,6 +32,7 @@ public class Desensitization {
         safeUser.setEmail(originUser.getEmail());
         safeUser.setUserAccount(originUser.getUserAccount());
         safeUser.setUserPassword(null);
+        safeUser.setLazyKey(originUser.getLazyKey());
         safeUser.setUserStatus(originUser.getUserStatus());
         safeUser.setUserRole(originUser.getUserRole());
         safeUser.setAvatarUrl(originUser.getAvatarUrl());

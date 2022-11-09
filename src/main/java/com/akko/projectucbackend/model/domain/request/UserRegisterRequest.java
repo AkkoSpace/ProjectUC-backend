@@ -24,6 +24,10 @@ public class UserRegisterRequest implements Serializable {
      */
     private String userPassword;
     /**
+     * 专属密钥
+     */
+    private String lazyKey;
+    /**
      * 校验密码
      */
     private String checkPassword;

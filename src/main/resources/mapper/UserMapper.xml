@@ -24,7 +24,7 @@
         id,username,avatar_url,
         gender,email,phone,
         user_role,user_status,del_flag,
-        user_account,user_password,create_time,
-        update_time
+        user_account,user_password,lazy_key,
+        create_time,update_time
     </sql>
 </mapper>
