@@ -2,6 +2,8 @@ package com.akko.projectucbackend.service.impl;
 
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import com.akko.projectucbackend.common.ErrorCode;
+import com.akko.projectucbackend.exception.BusinessException;
 import com.akko.projectucbackend.mapper.UserMapper;
 import com.akko.projectucbackend.model.domain.User;
 import com.akko.projectucbackend.service.UserService;
@@ -36,28 +38,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 1. 校验
         // 1.1 非空校验
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, lazyKey)) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAMETER_NULL);
         }
         // 1.2 长度校验
         // 1.2.1 用户名长度校验
         if (userAccount.length() < FOUR || userAccount.length() > SIXTEEN) {
-            return -1;
+            throw new BusinessException(ErrorCode.USERNAME_VERIFICATION_FAILURE);
         }
         // 1.2.2 密码长度校验
         if (userPassword.length() < EIGHT || userPassword.length() > SIXTEEN) {
-            return -1;
+            throw new BusinessException(ErrorCode.PASSWORD_VERIFICATION_FAILED);
         }
         if (checkPassword.length() < EIGHT || checkPassword.length() > SIXTEEN) {
-            return -1;
+            throw new BusinessException(ErrorCode.PASSWORD_VERIFICATION_FAILED);
         }
         // 1.2.3 专属密钥长度校验
         if (lazyKey.length() < FOUR || lazyKey.length() > EIGHT) {
-            return -1;
+            throw new BusinessException(ErrorCode.KEY_VERIFICATION_FAILURE);
         }
         // 1.3 账户名称特殊字符校验
         boolean isMatch = ReUtil.isMatch("^[A-Za-z0-9]+$", userAccount);
         if (!isMatch) {
-            return -1;
+            throw new BusinessException(ErrorCode.USERNAME_WITH_SPECIAL_CHARACTERS);
         }
         // 1.4 重复校验
         // 1.4.1 账号重复校验
@@ -65,18 +67,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         queryWrapper.eq("user_account", userAccount);
         long count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
-            return -1;
+            throw new BusinessException(ErrorCode.USERNAME_ALREADY_EXISTS);
         }
         // 1.4.2 专属密钥重复校验
         queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("lazy_key", lazyKey);
         count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
-            return -1;
+            throw new BusinessException(ErrorCode.KEY_ALREADY_EXISTS);
         }
         // 1.5 密码一致性校验
         if (!userPassword.equals(checkPassword)) {
-            return -1;
+            throw new BusinessException(ErrorCode.PASSWORD_INCONSISTENCY);
         }
         // 2. 密码加密
         String md5Password = DigestUtil.md5Hex((userPassword + SALT).getBytes());
@@ -87,7 +89,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         user.setLazyKey(lazyKey);
         boolean saveResult = save(user);
         if (!saveResult) {
-            return -1;
+            throw new BusinessException(ErrorCode.REGISTER_FAILED);
         }
         return user.getId();
     }
@@ -98,21 +100,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 1.1 非空校验
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             // TODO 修改为自定义异常
-            return null;
+            throw new BusinessException(ErrorCode.PARAMETER_NULL);
         }
         // 1.2 长度校验
         // 1.2.1 用户名长度校验
         if (userAccount.length() < FOUR || userAccount.length() > SIXTEEN) {
-            return null;
+            throw new BusinessException(ErrorCode.USERNAME_VERIFICATION_FAILURE);
         }
         // 1.2.2 密码长度校验
         if (userPassword.length() < FOUR || userPassword.length() > SIXTEEN) {
-            return null;
+            throw new BusinessException(ErrorCode.PASSWORD_VERIFICATION_FAILED);
         }
         // 1.3 账户名称特殊字符校验
         boolean isMatch = ReUtil.isMatch("^[A-Za-z0-9]+$", userAccount);
         if (!isMatch) {
-            return null;
+            throw new BusinessException(ErrorCode.USERNAME_WITH_SPECIAL_CHARACTERS);
         }
         // 2. 密码加密
         String md5Password = DigestUtil.md5Hex((userPassword + SALT).getBytes());
@@ -123,7 +125,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         User user = userMapper.selectOne(queryWrapper);
         if (user == null) {
             UserServiceImpl.log.info("user login failed, userAccount doesn't match userPassword");
-            return null;
+            throw new BusinessException(ErrorCode.USER_LOGIN_ERROR);
         }
         // 3. 用户脱敏
         User safeUser = getSafeUser(user);
